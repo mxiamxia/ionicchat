@@ -56,14 +56,19 @@ input.white{
 }
 
 .light-grey{
-  background-color: #EDEBEE;
+  background-color: #ffffff;
   border:0px;
 }
 
 .line-light-grey{
-  background-color: #EDEBEE;
+  background-color: #ffffff;
   border:none;
-  border-bottom: 1px solid #8DB4B4;
+  border-top: 1px solid #8DB4B4;
+}
+
+。line-light-top{
+  border:none;
+  border-top: 1px solid #8DB4B4;
 }
 
 .bottommsg{
@@ -73,8 +78,8 @@ input.white{
 }
 
 .divsend{
-  background-color:#D5D5D9;
-  margin-left: 7px;
+  background-color:#ffffff;
+  margin-left: 2px;
 }
 
 .iconsend{
@@ -110,7 +115,6 @@ input.white{
 .centerbadge{
   display:table !important;
 }
-
 
 .app-icon {
   background-color: #fff;

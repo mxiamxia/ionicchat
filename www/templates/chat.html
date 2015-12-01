@@ -13,10 +13,6 @@
       <ion-nav-view name="menuContent">
         <ion-view view-title="Cyber Engagement">
           <ion-content has-bouncing="true" class="content">
-            <div ng-show="connected">
-              <div class="log pad2">"Engagement Chat ";</div>
-              <div class="log">{{number_message}}</div>
-            </div>
             <div>
               <ul id="messages">
                 <li ng-class="{'message':message.style,'log':!message.style}" ng-repeat="message in activeUser.messages">
@@ -25,9 +21,23 @@
                   <audio ng-if="message.audio" dynamic-url controls="true" src=""
                          dynamic-url-src="{{message.url}}"></audio>
                 </li>
+                <li>
+                  <div class="card">
+                    <div class="item item-divider">
+                      I'm a Header in a Card!
+                    </div>
+                    <div class="item item-text-wrap">
+                      This is a basic Card with some text.
+                    </div>
+                    <div class="item item-divider">
+                      I'm a Footer in a Card!
+                    </div>
+                  </div>
+                </li>
               </ul>
             </div>
           </ion-content>
+
           <div class="list light-grey bottommsg">
             <div class="item item-input-inset light-grey">
               <label class="item-input-wrapper line-light-grey nopadtop">
@@ -36,6 +46,17 @@
               <div class="divsend">
                 <button class="button button-clear ion-android-send iconsend" ng-click="sendMessage()"></button>
               </div>
+            </div>
+            <div class="item tabs">
+              <a class="tab-item" href="#">
+                <i class="icon ion-thumbsup"></i>
+              </a>
+              <a class="tab-item" href="#">
+                <i class="icon ion-chatbox"></i>
+              </a>
+              <a class="tab-item" href="#">
+                <i class="icon ion-share"></i>
+              </a>
             </div>
           </div>
         </ion-view>
