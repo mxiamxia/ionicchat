@@ -3,7 +3,7 @@
  */
 angular.module('co.engage.services', [])
 
-  .factory('Login', function ($http,$state) {
+  .factory('Login', function ($http) {
     return {
       login: function (userid, password) {
         var input = {
@@ -24,28 +24,30 @@ angular.module('co.engage.services', [])
             "method": "login"
           },
           "status": {}
-      };
-      var req = {
-        method: 'POST',
-        url: 'http://192.168.254.155:8080/co-cyberlive/HttpService',
-        //headers: {
-        //  'Content-Type': undefined
-        //},
-        data: input
-      };
+        };
+        var req = {
+          method: 'POST',
+          url: 'http://192.168.254.155:8080/co-cyberlive/HttpService',
+          //headers: {
+          //  'Content-Type': undefined
+          //},
+          data: input
+        };
 
-    $http(req).then(function (resp) {
-      if(resp.data.status.code == '0000') {
-        $state.go('chat',{username:userid})
-      } else {
-        console.log('login fail');
+        return $http(req);
+
+        //$http(req).then(function (resp) {
+        //      if(resp.data.status.code == '0000') {
+        //        $state.go('chat',{username:userid})
+        //      } else {
+        //        console.log('login fail');
+        //      }
+        //      return resp.data;
+        //    }, function (err) {
+        //      console.log('login error');
+        //      return err.data;
+        //    });
       }
-      return resp.data;
-    }, function (err) {
-      console.log('login error');
-      return resp.data;
-    });
-  }
-}
+    }
 
-})
+  })
