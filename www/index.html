@@ -5,14 +5,14 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
+    <script src="lib/ionic/js/angular/angular.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.14.3.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
     <!-- ionic/angularjs js -->
-    <!--<script src="lib/ionic/js/ionic.bundle.js"></script>-->
     <script src="lib/ionic/js/ionic.js"></script>
     <script src="lib/ionic/js/angular/angular.js"></script>
     <script src="lib/ionic/js/angular-ui/angular-ui-router.js"></script>
@@ -21,8 +21,13 @@
     <script src="lib/ionic/js/angular/angular-sanitize.js"></script>
     <script src="lib/ionic/js/ionic-angular.js"></script>
 
-    <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
-    <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
+    <!--<script src="lib/angular-aria/angular-aria.min.js"></script>-->
+    <!--<script src="lib/angular-material/angular-material.js"></script>-->
+    <!--<link href="lib/angular-material/angular-material.css" rel="stylesheet">-->
+    <!-- moment -->
+    <script src="lib/moment.min.js"></script>
+    <!-- angular moment -->
+    <script src="lib/angular-moment.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
@@ -39,9 +44,24 @@
     <script src="js/controllers/ChatController.js"></script>
     <script src="js/controllers/LoginController.js"></script>
     <script src="js/directives.js"></script>
-  </head>
-  <body ng-app="co-engage">
+    <script src="js/filters.js"></script>
 
+  </head><body ng-app="co-engage">
     <ion-nav-view></ion-nav-view>
+
+    <script type="text/ng-template" id="customPopupTemplate.html">
+      <div class="custom-popup-wrapper dropup"
+           ng-style="{top: position().top-254+'px', left: position().top+'px'}"
+           style="display: block;"
+           ng-show="isOpen() && !moveInProgress"
+           aria-hidden="{{!isOpen()}}">
+        <ul class="dropdown-menu" role="listbox">
+          <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }"
+              ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">
+            <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
+          </li>
+        </ul>
+      </div>
+    </script>
   </body>
 </html>

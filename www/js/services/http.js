@@ -3,7 +3,7 @@
  */
 angular.module('co.engage.services', [])
 
-  .factory('Login', function ($http) {
+  .factory('Login', function ($http, HTTP_URL) {
     return {
       login: function (userid, password) {
         var input = {
@@ -11,7 +11,7 @@ angular.module('co.engage.services', [])
             "action": "security",
             "ip": "$!ip",
             "requestId": "$!requestId",
-            "requestTime": 1447873818805
+            "requestTime": new Date().getTime()
           },
           "body": {
             "parameters": {
@@ -27,26 +27,236 @@ angular.module('co.engage.services', [])
         };
         var req = {
           method: 'POST',
-          url: 'http://192.168.254.155:8080/co-cyberlive/HttpService',
-          //headers: {
-          //  'Content-Type': undefined
-          //},
+          url: HTTP_URL,
           data: input
         };
-
         return $http(req);
+      },
 
-        //$http(req).then(function (resp) {
-        //      if(resp.data.status.code == '0000') {
-        //        $state.go('chat',{username:userid})
-        //      } else {
-        //        console.log('login fail');
-        //      }
-        //      return resp.data;
-        //    }, function (err) {
-        //      console.log('login error');
-        //      return err.data;
-        //    });
+      online : function () {
+        var input = {
+          "header": {
+            "action": "chat",
+            "ip": "$!ip",
+            "requestId": "$!requestId",
+            "requestTime": new Date().getTime()
+          },
+          "body": {
+            "parameters": {
+              "action": "chat",
+              "method": "online",
+              "reonline": false,
+              "agentType": "User"
+            },
+            "method": "online"
+          },
+          "status": {
+
+          }
+
+        };
+        var req = {
+          method: 'POST',
+          url: HTTP_URL,
+          data: input
+        };
+        return $http(req);
+      },
+
+     offline : function(unsername) {
+       var input = {
+         "header": {
+           "action": "chat",
+           "ip": "$!ip",
+           "requestId": "$!requestId",
+           "requestTime": new Date().getTime()
+         },
+         "body": {
+           "parameters": {
+             "action": "chat",
+             "method": "offline",
+             "agentId": unsername,
+             "agentType": "User"
+           },
+           "method": "offline"
+         },
+         "status": {
+
+         }
+       }
+       var req = {
+         method: 'POST',
+         url: HTTP_URL,
+         data: input
+       };
+       return $http(req);
+     }
+    }
+  })
+
+  .factory('Poller', function($http, HTTP_URL) {
+    return {
+      poll : function (username) {
+        var input = {
+          "header": {
+            "action": "chat",
+            "ip": "$!ip",
+            "requestId": "$!requestId",
+            "requestTime": new Date().getTime()
+          },
+          "body": {
+            "parameters": {
+              "action": "chat",
+              "userId": username,
+              "method": "openConnection",
+              "agentType": "User"
+            },
+            "method": "openConnection"
+          },
+          "status": {}
+        };
+        var req = {
+          method: 'POST',
+          url: HTTP_URL,
+          data: input
+        };
+        return $http(req);
+      }
+    }
+  })
+  .factory('Engage', function($http, HTTP_URL) {
+    return {
+      acceptEngage : function (username, chatid) {
+        var input = {
+          "header": {
+            "action": "chat",
+            "ip": "$!ip",
+            "requestId": "$!requestId",
+            "requestTime": new Date().getTime()
+          },
+          "body": {
+            "parameters": {
+              "action": "chat",
+              "method": "acceptChat",
+              "chatId": chatid,
+              "to": username,
+              "toAgentType": "Robot",
+              "agentType": "User"
+            },
+            "method": "acceptChat"
+          },
+          "status": {
+
+          }
+        };
+        var req = {
+          method: 'POST',
+          url: HTTP_URL,
+          data: input
+        };
+        return $http(req);
+      },
+
+      rejectEngage : function (username, chatid) {
+        var input = {
+          "header": {
+            "action": "chat",
+            "ip": "$!ip",
+            "requestId": "$!requestId",
+            "requestTime": new Date().getTime()
+          },
+          "body": {
+            "parameters": {
+              "action": "chat",
+              "method": "declineChat",
+              "chatId": chatid,
+              "to": username,
+              "toAgentType": "Robot",
+              "agentType": "User"
+            },
+            "method": "declineChat"
+          },
+          "status": {
+          }
+        }
+        var req = {
+          method: 'POST',
+          url: HTTP_URL,
+          data: input
+        };
+        return $http(req);
+      }
+    }
+  })
+
+.factory('Send', function($http, HTTP_URL) {
+  return {
+    sendMessage : function (username, chatid, text) {
+      var input = {
+        "header": {
+          "action": "chat",
+          "ip": "$!ip",
+          "requestId": "$!requestId",
+          "requestTime": new Date().getTime()
+        },
+        "body": {
+          "parameters": {
+            "action": "chat",
+            "method": "sendMessage",
+            "chatId": chatid,
+            "message": {
+              "text": text
+            },
+            "to": username,
+            "toAgentType": "Robot",
+            "agentType": "User"
+          },
+          "method": "sendMessage"
+        },
+        "status": {
+
+        }
+      }
+      var req = {
+        method: 'POST',
+        url: HTTP_URL,
+        data: input
+      };
+      return $http(req);
+    }
+  }
+})
+
+.factory('SendTo', function($http, HTTP_URL) {
+    return {
+      sendTo : function(agentid, tocustomer, torobot, username) {
+        var input = {
+          "header": {
+            "action": "chat",
+            "ip": "$!ip",
+            "requestId": "$!requestId",
+            "requestTime": new Date().getTime()
+          },
+          "body": {
+            "parameters": {
+              "action": "chat",
+              "method": "switchSendDir",
+              "chatId": agentid,
+              "transmitToCustomer": tocustomer,
+              "transmitToRobot": torobot,
+              "to": username,
+              "toAgentType": "Robot",
+              "agentType": "User"
+            },
+            "method": "switchSendDir"
+          }
+        };
+        var req = {
+          method: 'POST',
+          url: HTTP_URL,
+          data: input
+        };
+        return $http(req);
       }
     }
 

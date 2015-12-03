@@ -1,0 +1,88 @@
+<ion-view id="userMessagesView"  cache-view="false" view-title="<i class='icon ion-chatbubble user-messages-top-icon'></i> <div class='msg-header-username'>CO Engagement</div>">
+  <ion-side-menus enable-menu-with-back-views="false">
+
+    <ion-side-menu-content>
+      <ion-nav-bar class="bar-positive ">
+        <ion-nav-back-button>
+        </ion-nav-back-button>
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+          </button>
+          <div ng-if="totalbadge > 0" class="centerbadge badge badge-assertive">{{totalbadge}}</div>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+          <button class="button button-icon button-clear ion-more">
+          </button>
+        </ion-nav-buttons>
+      </ion-nav-bar>
+      <ion-view view-title="Cyber Engagement">
+        <ion-content has-bouncing="true" class="has-header has-footer">
+          <div ng-repeat="message in activeUser.messages" class="message-wrapper"
+               on-hold="onMessageHold($event, $index, message)">
+            <div ng-if="loginname !== message.username">
+              <span ng-show="message.style" class="profile-pic left" ng-style="{color:message.color}">{{message.username}} : </span>
+
+              <div class="chat-bubble left">
+
+                <div class="message" ng-bind-html="message.content | nl2br" autolinker>
+                </div>
+                <div class="message-detail">
+                  <span am-time-ago="msgdate"></span>
+                </div>
+              </div>
+            </div>
+
+            <div ng-if="loginname === message.username">
+              <span ng-show="message.style" class="profile-pic right" ng-style="{color:message.color}">{{message.username}} : </span>
+              <div class="chat-bubble right">
+                <div class="message" ng-bind-html="message.content | nl2br" autolinker>
+                </div>
+                <div class="message-detail">
+                  <span am-time-ago="msgdate"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cf"></div>
+          </div>
+        </ion-content>
+        <div class='container-fluid typeahead-demo dropup'>
+          <ion-footer-bar class="bar-stable item-input-inset message-footer">
+            <label class="item-input-wrapper">
+              <!--<textarea ng-model="txt" value="" ng-enter="sendMessage()" on-hold="onSelectHold()" ng-change="search()" placeholder="Send a message to {{target}}" required-->
+              <!--minlength="1" maxlength="1500" msd-elastic></textarea>-->
+              <!--<textarea type="text" ng-model="customSelected" ng-enter="sendMessage()" on-hold="onSelectHold()" placeholder="Send a message to {{target}}" required-->
+                        <!--minlength="1" maxlength="1500" uib-typeahead="state as state.name for state in statesWithFlags | filter:{name:$viewValue} | limitTo:8"-->
+                        <!--typeahead-on-select="selectAutoMatch()" typeahead-popup-template-url="customPopupTemplate.html" msd-elastic></textarea>-->
+                <textarea type="text" ng-model="txt" ng-enter="sendMessage()" on-hold="onSelectHold()" placeholder="Send a message to {{target}}"
+                          uib-typeahead="state for state in states | filter:$viewValue | limitTo:8" cmsd-elastic></textarea>
+            </label>
+            <div class="footer-btn-wrap">
+              <button class="button button-icon button-clear icon footer-btn" ng-class="{'ion-mic-a':false, 'ion-radio-waves':true}" type="submit">
+              </button>
+            </div>
+            <div class="footer-btn-wrap">
+              <button class="button button-icon button-clear icon ion-android-send footer-btn" ng-click="sendMessage()"
+                      ng-disabled="!txt || txt === ''">
+              </button>
+            </div>
+          </ion-footer-bar>
+        </div>
+      </ion-view>
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+      <ion-header-bar class="bar-positive">
+        <h1 class="title">Conversation List</h1>
+      </ion-header-bar>
+      <ion-content>
+        <ion-list>
+          <ion-item menu-close ng-repeat="user in userlist" ng-click="selectUser($index)" ng-class="{active: activeUser == user}">
+            <ion-option-button class="button-assertive"  ng-click="deleteUser($index)">Delete</ion-option-button>
+            {{user.username}} <span ng-if="user.badge>0" class="badge badge-assertive">{{user.badge}}</span>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-side-menu>
+  </ion-side-menus>
+
+</ion-view>

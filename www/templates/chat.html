@@ -13,25 +13,36 @@
       <ion-nav-view name="menuContent">
         <ion-view view-title="Cyber Engagement">
           <ion-content has-bouncing="true" class="content">
-            <div ng-show="connected">
-              <div class="log pad2">"Engagement Chat ";</div>
-              <div class="log">{{number_message}}</div>
-            </div>
             <div>
               <ul id="messages">
                 <li ng-class="{'message':message.style,'log':!message.style}" ng-repeat="message in activeUser.messages">
                   <span ng-show="message.style" ng-style="{color:message.color}">{{message.username}} : </span>
-                  <span ng-if=!message.audio>{{message.content}}</span>
-                  <audio ng-if="message.audio" dynamic-url controls="true" src=""
+                  <span ng-show=!message.audio  ng-bind-html="message.content | nl2br"></span>
+                  <audio ng-show="message.audio" dynamic-url controls="true" src=""
                          dynamic-url-src="{{message.url}}"></audio>
                 </li>
+                <li class="message">
+                  <span ng-show="message.style" ng-style="{color:message.color}">{{message.username}} : </span>
+                  <div class="card">
+                    <div class="item item-divider">
+                      Please choose which from the following categories the trouble you're experiencing best fits in:
+                    </div>
+                    <div class="item item-text-wrap"  ng-click="sendTextMessage('Dial Tone')">
+                      1. Dial Tone
+                    </div>
+                    <div class="item item-text-wrap">
+                      2. Voice Mail
+                    </div>
+                  </div>
+                </li>
+
               </ul>
             </div>
           </ion-content>
           <div class="list light-grey bottommsg">
             <div class="item item-input-inset light-grey">
               <label class="item-input-wrapper line-light-grey nopadtop">
-                <input class="line-light-grey" ng-change="updateTyping()" type="text" placeholder="Message" ng-enter="sendMessage()" ng-model="txt">
+                <input class="line-light-grey" type="text" placeholder="Message" ng-enter="sendMessage()" ng-model="txt">
               </label>
               <div class="divsend">
                 <button class="button button-clear ion-android-send iconsend" ng-click="sendMessage()"></button>

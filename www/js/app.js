@@ -3,7 +3,9 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('co-engage', ['ionic', 'ngCordova', 'ngSanitize', 'co.engage.services'])
+var app = angular.module('co-engage', ['ionic', 'ngCordova', 'btford.socket-io', 'ngSanitize', 'co.engage.services', 'co.engage.filter', 'ngAnimate', 'ui.bootstrap'])
+
+  .constant('HTTP_URL', 'http://192.168.254.155:8080/co-cyberlive/HttpService')
 
 .run(function($ionicPlatform, $cordovaTouchID, $state) {
   $ionicPlatform.ready(function() {
@@ -19,7 +21,7 @@ var app = angular.module('co-engage', ['ionic', 'ngCordova', 'ngSanitize', 'co.e
       //2
       $cordovaTouchID.authenticate("Please authenticate with your fingerprint!").then(function() {
         // 3
-        alert("You are a trusty mate! Come in and find out...")
+        console.log("You are a trusty mate! Come in and find out...")
           $state.go('chat',{username:'mxia'});
 
       }, function (error) { // 4
@@ -27,12 +29,12 @@ var app = angular.module('co-engage', ['ionic', 'ngCordova', 'ngSanitize', 'co.e
         if (error == "Fallback authentication mechanism selected.") {
           // User selected to enter a password
         } else {
-          alert("Sorry, we are not able to grant access.");
+          console.log("Sorry, we are not able to grant access.");
         }
       });
     }, function (error) { // 5
-      alert(error); // TouchID not supported
-      $state.go('chat',{username:'mxia'});
+      console.log(error + " Touch ID is not availabe"); // TouchID not supported
+      //$state.go('chat',{username:'mxia'});
     });
 
   });
@@ -46,7 +48,7 @@ var app = angular.module('co-engage', ['ionic', 'ngCordova', 'ngSanitize', 'co.e
       })
       .state('chat', {
         url: "/chat/:username",
-        templateUrl: 'templates/chat.html',
+        templateUrl: 'templates/chatpane.html',
         controller: 'CoChatController'
         //views: {
         //  'menuContent': {
