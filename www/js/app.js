@@ -13,6 +13,7 @@ var app = angular.module('co-engage', ['ionic', 'ngCordova', 'btford.socket-io',
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      cordova.plugins.Keyboard.disableScroll(true);
     }
     if(window.StatusBar) {
       StatusBar.styleDefault();
