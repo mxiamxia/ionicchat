@@ -20,7 +20,7 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
   ];
-  var agentid;
+  var agentids = {};
 
   // Called to select the given project
   $scope.selectUser = function (index) {
@@ -53,7 +53,7 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
   poll();
 
   var chatprocess = function(message) {
-    agentid = message.chatId;
+
     var type = message.messageType;
     var from = message.from;
     var sender = message.sender;
@@ -61,6 +61,9 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
     var senderName = message.senderName;
     var senderText = message.text;
     var receiver = message.receiver;
+    if(senderName) {
+      agentids[senderName] = message.chatId;
+    }
 
     if (type == 'Command' && message.command) {
       switch (message.command) {
@@ -81,15 +84,15 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
                     $scope.activeUser = $scope.userlist[$scope.userlist.length-1];
                   }
                   addMessageToList(senderName, robotname, true, senderText, true);
-                  Engage.acceptEngage(senderName, agentid);
+                  Engage.acceptEngage(senderName, agentids[senderName]);
                 } else {
                   console.log('Engagement end');
-                  Engage.rejectEngage(senderName, agentid);
+                  Engage.rejectEngage(senderName, agentids[senderName]);
                 }
               });
               $timeout(function() {
                 confirmPopup.close(); //close the popup after 30 seconds for some reason
-                Engage.rejectEngage(senderName, agentid);
+                Engage.rejectEngage(senderName, agentids[senderName]);
               }, 30000);
             } else {
               addMessageToList(senderName, robotname, true, senderText, false)
@@ -136,8 +139,8 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
       return;
     }
     addMessageToList($scope.loginname, $scope.loginname, true,  $scope.data.search, false);
-    if(agentid) {
-      Send.sendMessage($scope.loginname, agentid, $scope.data.search);
+    if(agentids[$scope.activeUser.username]) {
+      Send.sendMessage($scope.loginname, agentids[$scope.activeUser.username], $scope.data.search);
     }
     $scope.data.search = '';
   }
@@ -185,8 +188,8 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
       return;
     }
     addMessageToList($scope.loginname, $scope.loginname, true,  text, false);
-    if(agentid) {
-      Send.sendMessage($scope.loginname, agentid, text);
+    if(agentids[$scope.activeUser.username]) {
+      Send.sendMessage($scope.loginname, agentids[$scope.activeUser.username], text);
     }
   }
 
@@ -315,15 +318,15 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
         buttonClicked: function(index) {
           switch (index) {
             case 0: // Send Msg to Engine
-              SendTo.sendTo(agentid,false, true, $scope.loginname);
+              SendTo.sendTo(agentids[$scope.activeUser.username],false, true, $scope.loginname);
               $scope.target = 'engine only';
               break;
             case 1: // Send Msg to Customer
-              SendTo.sendTo(agentid,true, false, $scope.loginname);
+              SendTo.sendTo(agentids[$scope.activeUser.username],true, false, $scope.loginname);
               $scope.target = 'customer only';
               break;
             case 2: //Send Msg to both
-              SendTo.sendTo(agentid,true, true, $scope.loginname);
+              SendTo.sendTo(agentids[$scope.activeUser.username],true, true, $scope.loginname);
               $scope.target = 'all';
               break;
           }
