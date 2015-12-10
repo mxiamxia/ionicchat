@@ -95,7 +95,7 @@ input.white{
 }
 
 .message{
-  padding: 7px 14px 7px 14px;
+  padding: 0px 0px 0px 0px;
   font-size: 16px;
 }
 
@@ -238,6 +238,7 @@ span.profile-pic.right {
 .message-detail {
   white-space: nowrap;
   font-size: 14px;
+  float: right;
 }
 
 .bar.item-input-inset .item-input-wrapper input {
@@ -379,4 +380,13 @@ div.dropup ul {
 
 .dropdown-menu li:hover {
   background-color: #20ffc0;
+}
+
+
+ion-popover-view.fit {
+  height: auto !important;
+}
+
+ion-popover-view.fit ion-content {
+  position: relative !important;
 }

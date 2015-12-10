@@ -14,7 +14,7 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.js"></script>
-    <script src="lib/ionic/js/angular/angular.js"></script>
+    <!--<script src="lib/ionic/js/angular/angular.js"></script>-->
     <script src="lib/ionic/js/angular-ui/angular-ui-router.js"></script>
     <script src="lib/ionic/js/angular/angular-animate.js"></script>
     <script src="lib/ionic/js/angular/angular-touch.js"></script>
@@ -32,12 +32,12 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
     <script src="cordova.js"></script>
-    <script src="lib/socket.io-client/socket.io.js"></script>
-    <script src="lib/angular-socket-io/socket.js"></script>
+    <!--<script src="lib/socket.io-client/socket.io.js"></script>-->
+    <!--<script src="lib/angular-socket-io/socket.js"></script>-->
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
-    <script src="js/services/socket.js"></script>
+    <!--<script src="js/services/socket.js"></script>-->
     <script src="js/services/http.js"></script>
 
     <script src="js/services/project.js"></script>
@@ -48,20 +48,36 @@
 
   </head><body ng-app="co-engage">
     <ion-nav-view></ion-nav-view>
-
-    <script type="text/ng-template" id="customPopupTemplate.html">
-      <div class="custom-popup-wrapper dropup"
-           ng-style="{top: position().top-254+'px', left: position().top+'px'}"
-           style="display: block;"
-           ng-show="isOpen() && !moveInProgress"
-           aria-hidden="{{!isOpen()}}">
-        <ul class="dropdown-menu" role="listbox">
-          <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }"
-              ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">
-            <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
-          </li>
-        </ul>
-      </div>
+    <!--<script type="text/ng-template" id="customPopupTemplate.html">-->
+      <!--<div class="custom-popup-wrapper dropup"-->
+           <!--ng-style="{top: position().top-254+'px', left: position().top+'px'}"-->
+           <!--style="display: block;"-->
+           <!--ng-show="isOpen() && !moveInProgress"-->
+           <!--aria-hidden="{{!isOpen()}}">-->
+        <!--<ul class="dropdown-menu" role="listbox">-->
+          <!--<li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }"-->
+              <!--ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">-->
+            <!--<div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</div>-->
+    <!--</script>-->
+    <script id="templates/popover.html" type="text/ng-template">
+      <ion-popover-view class="fit">
+        <ion-content scroll="false">
+          <div class="list">
+            <a class="item" href="http://learn.ionicframework.com/" target="_blank">
+              Email Conversation
+            </a>
+            <a class="item" ng-click="logoff()">
+              Log Off
+            </a>
+            <a class="item" href="http://www.cyberobject.com/" target="_blank">
+              About Us
+            </a>
+          </div>
+        </ion-content>
+      </ion-popover-view>
     </script>
   </body>
 </html>

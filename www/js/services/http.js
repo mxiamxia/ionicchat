@@ -28,7 +28,8 @@ angular.module('co.engage.services', [])
         var req = {
           method: 'POST',
           url: HTTP_URL,
-          data: input
+          data: input,
+          withCredentials: true
         };
         return $http(req);
       },
@@ -58,7 +59,8 @@ angular.module('co.engage.services', [])
         var req = {
           method: 'POST',
           url: HTTP_URL,
-          data: input
+          data: input,
+          withCredentials: true
         };
         return $http(req);
       },
@@ -87,7 +89,8 @@ angular.module('co.engage.services', [])
        var req = {
          method: 'POST',
          url: HTTP_URL,
-         data: input
+         data: input,
+         withCredentials: true
        };
        return $http(req);
      }
@@ -118,7 +121,8 @@ angular.module('co.engage.services', [])
         var req = {
           method: 'POST',
           url: HTTP_URL,
-          data: input
+          data: input,
+          withCredentials: true
         };
         return $http(req);
       }
@@ -152,7 +156,8 @@ angular.module('co.engage.services', [])
         var req = {
           method: 'POST',
           url: HTTP_URL,
-          data: input
+          data: input,
+          withCredentials: true
         };
         return $http(req);
       },
@@ -182,7 +187,8 @@ angular.module('co.engage.services', [])
         var req = {
           method: 'POST',
           url: HTTP_URL,
-          data: input
+          data: input,
+          withCredentials: true
         };
         return $http(req);
       }
@@ -220,7 +226,8 @@ angular.module('co.engage.services', [])
       var req = {
         method: 'POST',
         url: HTTP_URL,
-        data: input
+        data: input,
+        withCredentials: true
       };
       return $http(req);
     }
@@ -259,5 +266,21 @@ angular.module('co.engage.services', [])
         return $http(req);
       }
     }
-
+  })
+  .factory('AutoSuggest', function($http) {
+    return {
+      getPhrase: function(input) {
+        var req = {
+          method: 'GET',
+          url: 'http://192.168.254.155:8083/co-termnet-synonym/request',
+          params: {
+            request : input,
+            mode : 'complete',
+            src: 'feature',
+            type: 'all'
+          }
+        }
+        return $http(req);
+      }
+    }
   })

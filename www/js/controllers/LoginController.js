@@ -26,6 +26,10 @@ app.controller('LoginController',function($state,$sanitize, Login) {
           self.loginerror = true;
           self.errdetail = 'Fail to connect to remote server';
         });
+      }, function(error){
+        console.log('login error');
+        self.loginerror = true;
+        self.errdetail = 'Fail to connect to remote server';
       })
     }
     console.log("LOGIN user: " + username + " - PW: " + password);

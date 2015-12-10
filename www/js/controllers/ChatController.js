@@ -1,6 +1,6 @@
-app.controller('CoChatController', function ($scope, $stateParams, io, Poller ,$ionicPopup, $sanitize, $timeout,
+app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ionicPopup, $sanitize, $timeout,
                                              $ionicSideMenuDelegate, $ionicScrollDelegate, Users, Engage, Send, $ionicActionSheet, SendTo,
-                                             $q, $log) {
+                                             $q, $log, $ionicPopover, $state, Login, AutoSuggest) {
 
   $scope.userlist =[];
   $scope.loginname = $stateParams.username;
@@ -149,13 +149,33 @@ app.controller('CoChatController', function ($scope, $stateParams, io, Poller ,$
   }
 
   $scope.search = function() {
-    var m = $scope.statesdata.filter(function(state){
-      if($scope.data.search && state) {
-        if(state.toLowerCase().indexOf($scope.data.search.toLowerCase()) !== -1 )
-          return true;
-      }
-    })
-    $scope.data.matches = m;
+    if($scope.data.search.endsWith(' ')) {
+      AutoSuggest.getPhrase($scope.data.search.trim()).then(function(resp){
+        var data = resp.data.response;
+        if(data.status.code.value === '0000') {
+          var result = data.body.phrases.phrase;
+          var m = [];
+          if(angular.isArray(result)) {
+            result.forEach(function(obj) {
+              if(m.indexOf(obj.content) == -1) {
+                m.push(obj.content);
+              }
+            })
+          } else {
+            m.push(result.content);
+          }
+          $scope.data.matches = m;
+        }
+      });
+    } else {
+      var m = $scope.statesdata.filter(function(state){
+        if($scope.data.search && state) {
+          if(state.toLowerCase().indexOf($scope.data.search.toLowerCase()) !== -1 )
+            return true;
+        }
+      })
+      $scope.data.matches = m;
+    }
   }
 
 
@@ -291,6 +311,7 @@ app.controller('CoChatController', function ($scope, $stateParams, io, Poller ,$
         }, {
           text: 'Send To Both'
         }],
+        titleText: 'Who To Send',
         buttonClicked: function(index) {
           switch (index) {
             case 0: // Send Msg to Engine
@@ -318,9 +339,28 @@ app.controller('CoChatController', function ($scope, $stateParams, io, Poller ,$
   }, 300);
   //$scope.statesdata = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
-  $scope.statesdata = ['No Dail Tone', 'Can Call Out', 'Transmission', 'Yes',
-    'No', 'MLT', 'Slow Dial Tone','No Dial Tone At Times','Can\'t Break Dial Tone',
-    'Only has one phone/ all calls (OH1P/AC)',
-    'Some Phones (SP)'];
+  $scope.statesdata = ['Dail', 'Tone', 'Can', 'Call', 'Out', 'Transmission', 'Yes',
+    'No', 'MLT', 'Slow',   'At','Times','Can\'t', 'Break', 'caller', 'my', 'phone','only','some','all','not','one', 'have', 'please', 'select', 'block'];
+
+  //$scope.statesdata = ['No', 'Dail', 'Tone', 'Can', 'Call', 'Out', 'Transmission', 'Yes',
+  //  'No', 'MLT', 'Slow Dial Tone','No Dial Tone At Times','Can\'t Break Dial Tone',
+  //  'Only has one phone/ all calls (OH1P/AC)',
+  //  'Some Phones (SP)'];
+
+  $ionicPopover.fromTemplateUrl('templates/popover.html', {
+    scope: $scope,
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+  $scope.logoff = function(){
+    Login.offline($scope.loginname).then(function() {
+      console.log('login success');
+      $state.go('login');
+      $scope.popover.hide();
+    }, function() {
+      console.log('login error');
+    })
+  }
 })
 
