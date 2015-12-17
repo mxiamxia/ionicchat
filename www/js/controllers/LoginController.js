@@ -11,6 +11,7 @@ app.controller('LoginController',function($state,$sanitize, Login) {
     var password = self.data.password;
     if(username && password)
     {
+      //$state.go('chat',{username:username});
       Login.offline(username).then(function() {
         Login.login(username, password).then(function (resp) {
           if(resp.data.status.code == '0000') {

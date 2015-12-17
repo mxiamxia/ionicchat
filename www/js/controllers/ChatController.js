@@ -7,11 +7,7 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
   $scope.totalbadge = 0;
   // Grab the last active, or the first user
   $scope.activeUser = $scope.userlist[Users.getLastActiveIndex()];
-
-  $scope.msgdate = new Date();
-
   $scope.target = 'all';
-
   $scope.data = { "matches" : [], "search" : '' };
 
   //Add colors
@@ -44,7 +40,7 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
     Poller.poll($scope.loginname).then(function(resp) {
       if(resp.data.status.code == '0000' && resp.data.body.result && Array.isArray(resp.data.body.result) && resp.data.body.result.length > 0) {
         resp.data.body.result.forEach(function(message) {
-          chatprocess(message);
+          chatProcess(message);
         });
       }
       $timeout(poll, 1000);
@@ -52,15 +48,15 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
   };
   poll();
 
-  var chatprocess = function(message) {
+  var chatProcess = function(message) {
 
     var type = message.messageType;
     var from = message.from;
-    var sender = message.sender;
-    var senderType = message.senderType;
+    //var sender = message.sender;
+    //var senderType = message.senderType;
     var senderName = message.senderName;
     var senderText = message.text;
-    var receiver = message.receiver;
+    //var receiver = message.receiver;
     if(senderName) {
       agentids[senderName] = message.chatId;
     }
@@ -141,8 +137,25 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
     addMessageToList($scope.loginname, $scope.loginname, true,  $scope.data.search, false);
     if(agentids[$scope.activeUser.username]) {
       Send.sendMessage($scope.loginname, agentids[$scope.activeUser.username], $scope.data.search);
+      var shaObj = new jsSHA("SHA-1", "TEXT");
+      shaObj.update($scope.data.search);
+      var hash = shaObj.getHash("HEX");
+      var phrase = $scope.data.search.trim();
+      AutoSuggest.updateRecentPhrase(hash, phrase, $scope.loginname);
     }
     $scope.data.search = '';
+  }
+
+
+  $scope.sendReply = function(index) {
+    if(!$scope.activeUser) {
+      return;
+    }
+    var reply = $scope.popularReplies[index];
+    addMessageToList($scope.loginname, $scope.loginname, true,  reply, false);
+    if(agentids[$scope.activeUser.username]) {
+      Send.sendMessage($scope.loginname, agentids[$scope.activeUser.username], reply);
+    }
   }
 
   $scope.setLiSelect = function(index) {
@@ -190,6 +203,11 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
     addMessageToList($scope.loginname, $scope.loginname, true,  text, false);
     if(agentids[$scope.activeUser.username]) {
       Send.sendMessage($scope.loginname, agentids[$scope.activeUser.username], text);
+      var shaObj = new jsSHA("SHA-1", "TEXT");
+      shaObj.update($scope.data.search);
+      var hash = shaObj.getHash("HEX");
+      var phrase = $scope.data.search.trim();
+      AutoSuggest.updateRecentPhrase(hash, phrase, $scope.loginname);
     }
   }
 
@@ -280,30 +298,6 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
     })
   }
 
-  $scope.onMessageHold = function(e, itemIndex, message) {
-    console.log('message: ' + JSON.stringify(message, null, 2));
-    $ionicActionSheet.show({
-      buttons: [{
-        text: 'Copy Text'
-      }, {
-        text: 'Delete Message'
-      }],
-      buttonClicked: function(index) {
-        switch (index) {
-          case 0: // Copy Text
-            //cordova.plugins.clipboard.copy(message.text);
-
-            break;
-          case 1: // Delete
-            // no server side secrets here :~)
-            break;
-        }
-
-        return true;
-      }
-    });
-  };
-
   $scope.onSelectHold = function () {
     if($scope.activeUser) {
       $ionicActionSheet.show({
@@ -340,15 +334,9 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
   $timeout(function() {
     $scope.selectUser(0);
   }, 300);
-  //$scope.statesdata = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
-  $scope.statesdata = ['Dail', 'Tone', 'Can', 'Call', 'Out', 'Transmission', 'Yes',
+  $scope.statesdata = ['Dial', 'Tone', 'Can', 'Call', 'Out', 'Transmission', 'Yes',
     'No', 'MLT', 'Slow',   'At','Times','Can\'t', 'Break', 'caller', 'my', 'phone','only','some','all','not','one', 'have', 'please', 'select', 'block'];
-
-  //$scope.statesdata = ['No', 'Dail', 'Tone', 'Can', 'Call', 'Out', 'Transmission', 'Yes',
-  //  'No', 'MLT', 'Slow Dial Tone','No Dial Tone At Times','Can\'t Break Dial Tone',
-  //  'Only has one phone/ all calls (OH1P/AC)',
-  //  'Some Phones (SP)'];
 
   $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope,
@@ -365,5 +353,24 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
       console.log('login error');
     })
   }
+
+  var getPopularReplies = function() {
+    $scope.popularReplies = [];
+    AutoSuggest.getRecentPhrase($scope.loginname).then(function(resp) {
+      if(resp.data.status.code.value === '0000') {
+        $scope.popularReplies = resp.data.body.phrases;
+      }
+    })
+  }
+
+  $scope.$watch(function () {
+        return $ionicSideMenuDelegate.getOpenRatio();
+      },
+      function (ratio) {
+        if (ratio === -1) {
+          getPopularReplies();
+        }
+      });
+
 })
 
