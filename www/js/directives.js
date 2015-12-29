@@ -51,6 +51,6 @@ app.directive('ngEnter', function() {
         }
         return {
             link: postLink,
-            restrict: 'AE'
+            restrict: 'A'
         };
     })

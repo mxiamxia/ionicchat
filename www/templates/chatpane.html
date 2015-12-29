@@ -17,7 +17,7 @@
       <ion-view view-title="Cyber Engagement">
         <ion-content has-bouncing="true" class="has-header has-footer">
           <div ng-repeat="message in activeUser.messages" class="message-wrapper" on-hold="onSelectHold()">    <!--on-hold="onMessageHold($event, $index, message)"-->
-            <div ng-if="loginname !== message.username">
+            <div ng-if="loginname !== message.username" on-double-tap="sendMessageTo({{message.content}})">
               <span ng-show="message.style" class="profile-pic left" ng-style="{color:message.color}">{{message.username | limitTo:10}} : </span>
               <div class="chat-bubble left">
                 <div class="message" html-bind-compile="{{message.content}}" autolinker>
@@ -25,7 +25,7 @@
               </div>
             </div>
 
-            <div ng-if="loginname === message.username">
+            <div ng-if="loginname === message.username" >
               <span ng-show="message.style" class="profile-pic right" ng-style="{color:message.color}">{{message.username}} : </span>
               <div class="chat-bubble right">
                 <div class="message" ng-bind-html="message.content | nl2br" autolinker>
@@ -34,17 +34,6 @@
             </div>
             <div class="cf"></div>
           </div>
-          <!--<div>-->
-            <!--<span class="profile-pic left">test : </span>-->
-            <!--<div class="chat-bubble left">-->
-              <!--<div class="message">-->
-                <!--I am sorry. I did not get you.  Please select from one of the following:-->
-                <!--<br>-->
-                <!--<a ng-mousedown="sendTextMessage('no dial tone')"> 1. No Dial Tone </a><br>-->
-                <!--<a> 2. Slow Dial Tone</a><br>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
         </ion-content>
         <div class='container-fluid dropup'>
           <ion-footer-bar class="bar-stable item-input-inset message-footer">
@@ -58,19 +47,6 @@
                   {{$index+1}}. {{item}}
                 </li>
               </ul>
-              <!--<textarea ng-enter="sendMessage()" on-hold="onSelectHold()" ng-change="search()" placeholder="Send a message to {{target}}" required-->
-              <!--minlength="1" maxlength="1500" msd-elastic ng-model="data.search"></textarea>-->
-              <!--<textarea type="text" ng-model="customSelected" ng-enter="sendMessage()" on-hold="onSelectHold()" placeholder="Send a message to {{target}}" required-->
-              <!--minlength="1" maxlength="1500" uib-typeahead="state as state.name for state in statesWithFlags | filter:{name:$viewValue} | limitTo:8"-->
-              <!--typeahead-on-select="selectAutoMatch()" typeahead-popup-template-url="customPopupTemplate.html" msd-elastic></textarea>-->
-              <!--<textarea type="text" ng-model="txt" ng-enter="sendMessage()" on-hold="onSelectHold()" placeholder="Send a message to {{target}}"-->
-              <!--uib-typeahead="state for state in states | filter:$viewValue | limitTo:8" cmsd-elastic></textarea>-->
-              <!--<ul class="dropdown-menu" ng-style="{top: position().top+'px', left: 15+'px'}" style="display: block;" ng-controller="AutoSuggestCtrl">-->
-              <!--<li ng-repeat="state in states | limitTo:8" >-->
-              <!--<a ng-click="setLiSelect($index)"> {{state}} </a>-->
-              <!--</li>-->
-              <!--</ul>-->
-
             </label>
             <div class="footer-btn-wrap">
               <button class="button button-icon button-clear icon footer-btn" ng-class="{'ion-mic-a':false, 'ion-radio-waves':true}" type="submit">

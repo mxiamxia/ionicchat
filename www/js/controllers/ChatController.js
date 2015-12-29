@@ -155,7 +155,18 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller ,$ioni
     addMessageToList($scope.loginname, $scope.loginname, true,  reply, false);
     if(agentids[$scope.activeUser.username]) {
       Send.sendMessage($scope.loginname, agentids[$scope.activeUser.username], reply);
+      var shaObj = new jsSHA("SHA-1", "TEXT");
+      shaObj.update(reply);
+      var hash = shaObj.getHash("HEX");
+      var reply = reply.trim();
+      AutoSuggest.updateRecentPhrase(hash, reply, $scope.loginname);
     }
+  }
+
+  $scope.sendMessageTo = function (input) {
+    SendTo.sendTo(agentids[$scope.activeUser.username],true, false, $scope.loginname).then(function(resp) {
+
+    })
   }
 
   $scope.setLiSelect = function(index) {
