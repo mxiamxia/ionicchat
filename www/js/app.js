@@ -6,6 +6,7 @@
 var app = angular.module('co-engage', ['ionic', 'ngCordova', 'ngSanitize', 'co.engage.services', 'co.engage.filter', 'ngAnimate'])
 
   .constant('HTTP_URL', 'http://192.168.254.155:8080/co-cyberlive/HttpService')
+    .constant('SPEECH_RUL', "http://192.168.254.155:8089/co-voice-channel/uploadAudio.co")
 
 .run(function($ionicPlatform, $cordovaTouchID, $state) {
   $ionicPlatform.ready(function($httpProvider) {

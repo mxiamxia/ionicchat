@@ -17,7 +17,7 @@
       <ion-view view-title="Cyber Engagement">
         <ion-content has-bouncing="true" class="has-header has-footer">
           <div ng-repeat="message in activeUser.messages" class="message-wrapper" on-hold="onSelectHold()">    <!--on-hold="onMessageHold($event, $index, message)"-->
-            <div ng-if="loginname !== message.username" on-double-tap="sendMessageTo({{message.content}})">
+            <div ng-if="loginname !== message.username" >
               <span ng-show="message.style" class="profile-pic left" ng-style="{color:message.color}">{{message.username | limitTo:10}} : </span>
               <div class="chat-bubble left">
                 <div class="message" html-bind-compile="{{message.content}}" autolinker>
@@ -49,7 +49,7 @@
               </ul>
             </label>
             <div class="footer-btn-wrap">
-              <button class="button button-icon button-clear icon footer-btn" ng-class="{'ion-mic-a':false, 'ion-radio-waves':true}" type="submit">
+              <button class="button button-icon button-clear icon footer-btn" ng-class="{'ion-mic-a':!recording, 'ion-radio-waves':recording}" ng-click="recordAudio()">
               </button>
             </div>
             <div class="footer-btn-wrap">
