@@ -1,6 +1,4 @@
-/**
- * Created by mxia on 11/9/2015.
- */
+
 app.factory('Users', function () {
         return {
             all: function () {

@@ -413,7 +413,7 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller, $ioni
             Record.save().then(function () {
                 Record.upload().then(function (resp) {
                     console.log(resp);
-                    if(resp.data !== null || resp.data==="") {
+                    if (resp.status.code.value === '0000' && resp.body.result !== "") {
                         sendTextMessage(resp.data);
                     }
                 })
