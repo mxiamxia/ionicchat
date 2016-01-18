@@ -20,6 +20,10 @@ var app = angular.module('co-engage', ['ionic', 'ngCordova', 'ngSanitize', 'co.e
       StatusBar.styleDefault();
     }
 
+    if (angular.isUndefined(navigator.proximity) || !angular.isFunction(navigator.proximity.enableSensor)) {
+      alert('Device do not support watchAcceleration');
+    }
+
     //$cordovaTouchID.checkSupport().then(function() {
     //  //2
     //  $cordovaTouchID.authenticate("Please authenticate with your fingerprint!").then(function() {

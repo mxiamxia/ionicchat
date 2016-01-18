@@ -7,7 +7,7 @@ app.controller('LoginController',function($state,$sanitize, Login) {
 
 
   self.loginApp = function() {
-    var username=$sanitize(self.data.username);
+    var username=$sanitize(self.data.username).toLowerCase();
     var password = self.data.password;
     if(username && password)
     {
