@@ -49,11 +49,11 @@
               </ul>
             </label>
             <div class="footer-btn-wrap">
-              <button class="button button-icon button-clear icon footer-btn" ng-class="{'ion-mic-a':!recording, 'ion-radio-waves':recording}" ng-click="recordAudio()">
+              <button class="button button-icon button-clear icon footer-btn" ng-class="{'ion-mic-a':!recording, 'ion-loading-a':recording}" ng-click="recordAudio()">
               </button>
             </div>
             <div class="footer-btn-wrap">
-              <button class="button button-icon button-clear icon ion-android-send footer-btn" ng-click="sendMessage()" on-hold="onSelectHold()"
+              <button class="button button-icon button-clear icon ion-paper-airplane footer-btn" ng-click="sendMessage()" on-hold="onSelectHold()"
                       ng-disabled="!data.search || data.search === ''">
               </button>
             </div>

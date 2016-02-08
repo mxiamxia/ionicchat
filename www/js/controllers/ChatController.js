@@ -423,24 +423,29 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller, $ioni
 
   $scope.recordAudio = function () {
     if ($scope.recording) {
-      //$scope.watch.clearWatch();
-      $cordovaDeviceMotion.clearWatch($scope.watch)
-        .then(function(result) {
-          // success
-          console.log('stop motion dection' + result);
-        }, function (error) {
-          // error
-          console.log('stop motion dection' + error);
-        });
+      if ($scope.watch) {
+        $cordovaDeviceMotion.clearWatch($scope.watch)
+          .then(function (result) {
+            // success
+            console.log('stop motion dection' + result);
+          }, function (error) {
+            // error
+            console.log('stop motion dection' + error);
+          });
+      }
+      onRecordEvent(false);
+      //window.clearInterval(proximityID);
     } else {
       startWatchAcceleration();
+      //getProximitySensorState();
+      onRecordEvent(true);
     }
-    onRecordEvent();
+    //onRecordEvent();
   }
 
-  var onRecordEvent = function () {
+  var onRecordEvent = function (on) {
     console.log('onRecordEvent: ' + $scope.recording);
-    if ($scope.recording) {
+    if (!on) {
       $scope.recording = false;
       Record.stop();
       Record.save().then(function () {
@@ -513,23 +518,32 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller, $ioni
             console.log('motion movement=========' + abs + 'x=' + X + 'y= ' + Y + 'z= ' + Z);
             if ($scope.recording && Y < Z) { //Y<Z indicates lay phone down
               console.log('detected phone lay down');
-              onRecordEvent();
+              onRecordEvent(false);
             }
             if (!$scope.recording && Y > Z) {   //Y>Z indicate move phone up
               console.log('detected phone move up');
-              onRecordEvent();
+              onRecordEvent(true);
             }
           }
         }
       });
   }
 
-
+  $scope.onFace = false;
   var proximityID = null;
   var proximityOnSuccess = function(val) {
-    if(val === 'true') {
+    console.log(val);
+    if(val) {
       console.log('phone close to face');
-      onRecordEvent();
+      $scope.onFace = true;
+      if(!$scope.recording){
+        onRecordEvent(true);
+      }
+    } else {
+      $scope.onFace =false;
+      if($scope.recording) {
+        onRecordEvent(false);
+      }
     }
   }
 
@@ -541,7 +555,7 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller, $ioni
       console.log('Device do not support watchAcceleration');
     }
     navigator.proximity.enableSensor();
-    proximityID = setInterval(getProximitySensorState, 200);
+    proximityID = setInterval(getCurProximitySensorState, 200);
   }
 
   //cordovaProximity.proximitysensorWatchStart().then(function(state){
@@ -553,4 +567,5 @@ app.controller('CoChatController', function ($scope, $stateParams, Poller, $ioni
   }
 
 })
+
 

@@ -36,6 +36,7 @@ app.directive('ngEnter', function() {
                             } else {
                                 text = item;
                             }
+                            text = text.replace('\'', "\\\'");
                             html = html.concat('<a ng-click=\"sendTextMessage(\''+text.trim()+'\')\">'+item+'</a><br/>');
                         } else {
                             html = html.concat(item + '<br/>');

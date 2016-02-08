@@ -28,7 +28,6 @@
     "cordova-plugin-proximity"
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android"
+    "ios"
   ]
 }
